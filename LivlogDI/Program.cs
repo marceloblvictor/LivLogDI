@@ -1,6 +1,9 @@
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
 using LivlogDI.Data;
+using LivlogDI.Data.Repositories;
+using LivlogDI.Data.Repositories.Interfaces;
+using LivlogDI.Services;
+using LivlogDI.Services.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -10,6 +13,8 @@ builder.Services.AddDbContext<LivlogDIContext>(
             ?? throw new InvalidOperationException("Connection string 'LivlogDIContext' not found.")));
 
 // Add services to the container.
+builder.Services.AddScoped(typeof(IBookService), typeof(BookService));
+builder.Services.AddScoped(typeof(IBookRepository), typeof(BookRepository));
 
 builder.Services.AddControllers();
 

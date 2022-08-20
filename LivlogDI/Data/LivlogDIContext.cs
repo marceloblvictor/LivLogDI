@@ -1,19 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using LivlogDI.Models.Entities;
 using Microsoft.EntityFrameworkCore;
-using LivlogDI.Models.Entities;
 
 namespace LivlogDI.Data
 {
     public class LivlogDIContext : DbContext
     {
+        public LivlogDIContext()
+        {
+        }
+
         public LivlogDIContext (DbContextOptions<LivlogDIContext> options)
             : base(options)
         {
         }
 
-        public DbSet<Book> Books { get; set; } = default!;
+        public virtual DbSet<Book> Books { get; set; } = default!;
     }
 }
