@@ -1,5 +1,6 @@
 ﻿using LivlogDI.Data.Repositories.Interfaces;
 using LivlogDI.Models.Entities;
+using Microsoft.EntityFrameworkCore;
 
 namespace LivlogDI.Data.Repositories
 {
@@ -14,12 +15,27 @@ namespace LivlogDI.Data.Repositories
 
         public List<Book> GetAll()
         {
-            return new List<Book>();
+            return _dbContext.Books
+                .AsNoTracking()
+                .OrderByDescending(b => b.Id)
+                .ToList();
         }
 
         public Book Get(int bookId)
         {
-            return new Book();
+            return _dbContext.Books
+                .AsNoTracking()
+                .Where(b => b.Id == bookId)
+                .FirstOrDefault()
+                    ?? throw new ArgumentException("There is no record with the given id");
+        }
+
+        public Book Add(Book book)
+        {
+            _dbContext.Books.Add(book);
+            _dbContext.SaveChanges();
+
+            return book;
         }
     }
 }

@@ -26,4 +26,8 @@
     <ProjectReference Include="..\LivlogDI\LivlogDI.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Models\" />
+  </ItemGroup>
+
 </Project>
