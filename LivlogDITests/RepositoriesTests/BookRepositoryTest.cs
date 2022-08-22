@@ -8,9 +8,10 @@ namespace LivlogDITests.RepositoriesTests
 {
     public class BookRepositoryTest
     {
-        BookRepository _mockedRepo { get; set; }
         Mock<LivlogDIContext> _mockedDbContext { get; set; }
         List<Book> _mockedBooks { get; set; }
+
+        BookRepository Repository { get; set; }
 
         public BookRepositoryTest()
         {
@@ -67,14 +68,14 @@ namespace LivlogDITests.RepositoriesTests
                 .Setup(ctx => ctx.Books)
                 .Returns(mockBooks.Object);
 
-            _mockedRepo = new BookRepository(_mockedDbContext.Object);
+            Repository = new BookRepository(_mockedDbContext.Object);
         }
 
         [Fact]
         public void GetAll_BooksAreOrderedDescendingById()
         {            
             // Act
-            var books = _mockedRepo.GetAll();
+            var books = Repository.GetAll();
 
             // Assert
             Assert.Equal(3, books.Count());
@@ -90,9 +91,9 @@ namespace LivlogDITests.RepositoriesTests
         public void GetABookWithAValidId_IsSuccess(int validID)
         {
             // Act
-            var book = _mockedRepo.Get(validID);
+            var book = Repository.Get(validID);
 
-            // Assert
+            // Assert            
             Assert.NotNull(book);
             Assert.Equal(validID, book.Id);
         }
@@ -101,11 +102,11 @@ namespace LivlogDITests.RepositoriesTests
         [InlineData(99)]
         [InlineData(999)]
         [InlineData(9999)]
-        public void GetABookWithAnInvalidId_IsFailure(int validID)
+        public void GetABookWithAnInvalidId_IsFailure(int invalidId)
         {
             // Act
             var getBookOperation = 
-                new Func<Book>(() => _mockedRepo.Get(validID));
+                new Func<Book>(() => Repository.Get(invalidId));
 
             // Assert
             Assert.Throws<ArgumentException>(getBookOperation);
@@ -122,7 +123,7 @@ namespace LivlogDITests.RepositoriesTests
                 PagesQuantity = 72
             };
 
-            _mockedRepo.Add(newBook);
+            Repository.Add(newBook);
             
 
             Assert.True(_mockedDbContext.Object.Books.Count() == 4);

@@ -6,5 +6,6 @@ namespace LivlogDI.Data.Repositories.Interfaces
     {
         Book Get(int bookId);
         List<Book> GetAll();
+        Book Add(Book book);
     }
 }
