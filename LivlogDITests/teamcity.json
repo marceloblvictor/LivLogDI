@@ -1,0 +1,470 @@
+{
+  "LivlogDI.dll": {
+    "C:\\Users\\marce\\source\\repos\\LivlogDI\\LivlogDI\\Program.cs": {
+      "Program": {
+        "System.Void Program::<Main>$(System.String[])": {
+          "Lines": {
+            "8": 0,
+            "10": 0,
+            "11": 0,
+            "12": 0,
+            "13": 0,
+            "16": 0,
+            "17": 0,
+            "19": 0,
+            "22": 0,
+            "23": 0,
+            "25": 0,
+            "28": 0,
+            "29": 0,
+            "30": 0,
+            "31": 0,
+            "32": 0,
+            "34": 0,
+            "36": 0,
+            "38": 0,
+            "40": 0
+          },
+          "Branches": [
+            {
+              "Line": 28,
+              "Offset": 200,
+              "EndOffset": 202,
+              "Path": 0,
+              "Ordinal": 0,
+              "Hits": 0
+            },
+            {
+              "Line": 28,
+              "Offset": 200,
+              "EndOffset": 220,
+              "Path": 1,
+              "Ordinal": 1,
+              "Hits": 0
+            },
+            {
+              "Line": 11,
+              "Offset": 23,
+              "EndOffset": 25,
+              "Path": 0,
+              "Ordinal": 0,
+              "Hits": 0
+            },
+            {
+              "Line": 11,
+              "Offset": 23,
+              "EndOffset": 37,
+              "Path": 1,
+              "Ordinal": 1,
+              "Hits": 0
+            }
+          ]
+        }
+      }
+    },
+    "C:\\Users\\marce\\source\\repos\\LivlogDI\\LivlogDI\\Services\\BookService.cs": {
+      "LivlogDI.Services.BookService": {
+        "LivlogDI.Models.DTO.BookDTO LivlogDI.Services.BookService::Get(System.Int32)": {
+          "Lines": {
+            "18": 3,
+            "19": 3,
+            "21": 3,
+            "22": 3
+          },
+          "Branches": []
+        },
+        "System.Collections.Generic.IEnumerable`1<LivlogDI.Models.DTO.BookDTO> LivlogDI.Services.BookService::GetAll()": {
+          "Lines": {
+            "25": 1,
+            "26": 1,
+            "28": 1,
+            "29": 1,
+            "30": 1,
+            "31": 1
+          },
+          "Branches": [
+            {
+              "Line": 28,
+              "Offset": 20,
+              "EndOffset": 22,
+              "Path": 0,
+              "Ordinal": 0,
+              "Hits": 0
+            },
+            {
+              "Line": 28,
+              "Offset": 20,
+              "EndOffset": 31,
+              "Path": 1,
+              "Ordinal": 1,
+              "Hits": 1
+            }
+          ]
+        },
+        "LivlogDI.Models.DTO.BookDTO LivlogDI.Services.BookService::Add(LivlogDI.Models.DTO.BookDTO)": {
+          "Lines": {
+            "34": 1,
+            "35": 1,
+            "37": 1,
+            "39": 1,
+            "40": 1
+          },
+          "Branches": []
+        },
+        "LivlogDI.Models.DTO.BookDTO LivlogDI.Services.BookService::CreateDTO(LivlogDI.Models.Entities.Book)": {
+          "Lines": {
+            "43": 7,
+            "44": 7,
+            "45": 7,
+            "46": 7,
+            "47": 7,
+            "48": 7,
+            "49": 7,
+            "50": 7,
+            "51": 7
+          },
+          "Branches": []
+        },
+        "System.Collections.Generic.IEnumerable`1<LivlogDI.Models.DTO.BookDTO> LivlogDI.Services.BookService::CreateDTOs(System.Collections.Generic.IEnumerable`1<LivlogDI.Models.Entities.Book>)": {
+          "Lines": {
+            "54": 1,
+            "55": 1,
+            "57": 9,
+            "58": 3,
+            "59": 3,
+            "60": 3,
+            "62": 1,
+            "63": 1
+          },
+          "Branches": [
+            {
+              "Line": 57,
+              "Offset": 46,
+              "EndOffset": 17,
+              "Path": 1,
+              "Ordinal": 1,
+              "Hits": 3
+            },
+            {
+              "Line": 57,
+              "Offset": 46,
+              "EndOffset": 48,
+              "Path": 0,
+              "Ordinal": 0,
+              "Hits": 1
+            }
+          ]
+        },
+        "LivlogDI.Models.Entities.Book LivlogDI.Services.BookService::CreateEntity(LivlogDI.Models.DTO.BookDTO)": {
+          "Lines": {
+            "66": 1,
+            "67": 1,
+            "68": 1,
+            "69": 1,
+            "70": 1,
+            "71": 1,
+            "72": 1,
+            "73": 1,
+            "74": 1
+          },
+          "Branches": []
+        },
+        "System.Void LivlogDI.Services.BookService::.ctor(LivlogDI.Data.Repositories.Interfaces.IBookRepository)": {
+          "Lines": {
+            "12": 5,
+            "13": 5,
+            "14": 5,
+            "15": 5
+          },
+          "Branches": []
+        }
+      }
+    },
+    "C:\\Users\\marce\\source\\repos\\LivlogDI\\LivlogDI\\Models\\Entities\\Book.cs": {
+      "LivlogDI.Models.Entities.Book": {
+        "System.Int32 LivlogDI.Models.Entities.Book::get_Id()": {
+          "Lines": {
+            "5": 104
+          },
+          "Branches": []
+        },
+        "System.String LivlogDI.Models.Entities.Book::get_Title()": {
+          "Lines": {
+            "6": 50
+          },
+          "Branches": []
+        },
+        "System.String LivlogDI.Models.Entities.Book::get_ISSBN()": {
+          "Lines": {
+            "7": 48
+          },
+          "Branches": []
+        },
+        "System.Int32 LivlogDI.Models.Entities.Book::get_PagesQuantity()": {
+          "Lines": {
+            "8": 48
+          },
+          "Branches": []
+        }
+      }
+    },
+    "C:\\Users\\marce\\source\\repos\\LivlogDI\\LivlogDI\\Models\\DTO\\BookDTO.cs": {
+      "LivlogDI.Models.DTO.BookDTO": {
+        "System.Int32 LivlogDI.Models.DTO.BookDTO::get_Id()": {
+          "Lines": {
+            "5": 22
+          },
+          "Branches": []
+        },
+        "System.String LivlogDI.Models.DTO.BookDTO::get_Title()": {
+          "Lines": {
+            "6": 15
+          },
+          "Branches": []
+        },
+        "System.String LivlogDI.Models.DTO.BookDTO::get_ISSBN()": {
+          "Lines": {
+            "7": 13
+          },
+          "Branches": []
+        },
+        "System.Int32 LivlogDI.Models.DTO.BookDTO::get_PagesQuantity()": {
+          "Lines": {
+            "8": 13
+          },
+          "Branches": []
+        }
+      }
+    },
+    "C:\\Users\\marce\\source\\repos\\LivlogDI\\LivlogDI\\Migrations\\20220818015519_FirstMigration.cs": {
+      "LivlogDI.Migrations.FirstMigration": {
+        "System.Void LivlogDI.Migrations.FirstMigration::Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)": {
+          "Lines": {
+            "10": 0,
+            "11": 0,
+            "12": 0,
+            "13": 0,
+            "14": 0,
+            "15": 0,
+            "16": 0,
+            "17": 0,
+            "18": 0,
+            "19": 0,
+            "20": 0,
+            "21": 0,
+            "22": 0,
+            "23": 0,
+            "24": 0,
+            "25": 0
+          },
+          "Branches": []
+        },
+        "System.Void LivlogDI.Migrations.FirstMigration::Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)": {
+          "Lines": {
+            "28": 0,
+            "29": 0,
+            "30": 0,
+            "31": 0
+          },
+          "Branches": []
+        }
+      }
+    },
+    "C:\\Users\\marce\\source\\repos\\LivlogDI\\LivlogDI\\Migrations\\20220818015519_FirstMigration.Designer.cs": {
+      "LivlogDI.Migrations.FirstMigration": {
+        "System.Void LivlogDI.Migrations.FirstMigration::BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)": {
+          "Lines": {
+            "18": 0,
+            "20": 0,
+            "21": 0,
+            "22": 0,
+            "24": 0,
+            "26": 0,
+            "27": 0,
+            "28": 0,
+            "29": 0,
+            "30": 0,
+            "31": 0,
+            "32": 0,
+            "33": 0,
+            "34": 0,
+            "35": 0,
+            "36": 0,
+            "37": 0,
+            "38": 0,
+            "39": 0,
+            "40": 0,
+            "41": 0,
+            "42": 0,
+            "43": 0,
+            "44": 0,
+            "45": 0,
+            "46": 0,
+            "47": 0,
+            "48": 0,
+            "50": 0
+          },
+          "Branches": []
+        }
+      }
+    },
+    "C:\\Users\\marce\\source\\repos\\LivlogDI\\LivlogDI\\Migrations\\LivlogDIContextModelSnapshot.cs": {
+      "LivlogDI.Migrations.LivlogDIContextModelSnapshot": {
+        "System.Void LivlogDI.Migrations.LivlogDIContextModelSnapshot::BuildModel(Microsoft.EntityFrameworkCore.ModelBuilder)": {
+          "Lines": {
+            "16": 0,
+            "18": 0,
+            "19": 0,
+            "20": 0,
+            "22": 0,
+            "24": 0,
+            "25": 0,
+            "26": 0,
+            "27": 0,
+            "28": 0,
+            "29": 0,
+            "30": 0,
+            "31": 0,
+            "32": 0,
+            "33": 0,
+            "34": 0,
+            "35": 0,
+            "36": 0,
+            "37": 0,
+            "38": 0,
+            "39": 0,
+            "40": 0,
+            "41": 0,
+            "42": 0,
+            "43": 0,
+            "44": 0,
+            "45": 0,
+            "46": 0,
+            "48": 0
+          },
+          "Branches": []
+        }
+      }
+    },
+    "C:\\Users\\marce\\source\\repos\\LivlogDI\\LivlogDI\\Data\\LivlogDIContext.cs": {
+      "LivlogDI.Data.LivlogDIContext": {
+        "Microsoft.EntityFrameworkCore.DbSet`1<LivlogDI.Models.Entities.Book> LivlogDI.Data.LivlogDIContext::get_Books()": {
+          "Lines": {
+            "17": 8
+          },
+          "Branches": []
+        },
+        "System.Void LivlogDI.Data.LivlogDIContext::.ctor()": {
+          "Lines": {
+            "8": 8,
+            "9": 8,
+            "10": 8
+          },
+          "Branches": []
+        },
+        "System.Void LivlogDI.Data.LivlogDIContext::.ctor(Microsoft.EntityFrameworkCore.DbContextOptions`1<LivlogDI.Data.LivlogDIContext>)": {
+          "Lines": {
+            "13": 0,
+            "14": 0,
+            "15": 0
+          },
+          "Branches": []
+        }
+      }
+    },
+    "C:\\Users\\marce\\source\\repos\\LivlogDI\\LivlogDI\\Data\\Repositories\\BookRepository.cs": {
+      "LivlogDI.Data.Repositories.BookRepository": {
+        "System.Collections.Generic.List`1<LivlogDI.Models.Entities.Book> LivlogDI.Data.Repositories.BookRepository::GetAll()": {
+          "Lines": {
+            "17": 1,
+            "18": 1,
+            "19": 1,
+            "20": 1,
+            "21": 1,
+            "22": 1
+          },
+          "Branches": []
+        },
+        "LivlogDI.Models.Entities.Book LivlogDI.Data.Repositories.BookRepository::Get(System.Int32)": {
+          "Lines": {
+            "25": 6,
+            "26": 6,
+            "27": 6,
+            "28": 6,
+            "29": 6,
+            "30": 6,
+            "31": 3
+          },
+          "Branches": [
+            {
+              "Line": 26,
+              "Offset": 134,
+              "EndOffset": 136,
+              "Path": 0,
+              "Ordinal": 0,
+              "Hits": 3
+            },
+            {
+              "Line": 26,
+              "Offset": 134,
+              "EndOffset": 148,
+              "Path": 1,
+              "Ordinal": 1,
+              "Hits": 3
+            }
+          ]
+        },
+        "LivlogDI.Models.Entities.Book LivlogDI.Data.Repositories.BookRepository::Add(LivlogDI.Models.Entities.Book)": {
+          "Lines": {
+            "34": 1,
+            "35": 1,
+            "36": 1,
+            "38": 1,
+            "39": 1
+          },
+          "Branches": []
+        },
+        "System.Void LivlogDI.Data.Repositories.BookRepository::.ctor(LivlogDI.Data.LivlogDIContext)": {
+          "Lines": {
+            "11": 8,
+            "12": 8,
+            "13": 8,
+            "14": 8
+          },
+          "Branches": []
+        }
+      }
+    },
+    "C:\\Users\\marce\\source\\repos\\LivlogDI\\LivlogDI\\Controllers\\BooksController.cs": {
+      "LivlogDI.Controllers.BooksController": {
+        "Microsoft.AspNetCore.Mvc.ActionResult`1<System.Collections.Generic.IEnumerable`1<LivlogDI.Models.DTO.BookDTO>> LivlogDI.Controllers.BooksController::GetAll()": {
+          "Lines": {
+            "20": 0
+          },
+          "Branches": []
+        },
+        "Microsoft.AspNetCore.Mvc.ActionResult`1<LivlogDI.Models.DTO.BookDTO> LivlogDI.Controllers.BooksController::Get(System.Int32)": {
+          "Lines": {
+            "24": 0
+          },
+          "Branches": []
+        },
+        "Microsoft.AspNetCore.Mvc.ActionResult`1<LivlogDI.Models.DTO.BookDTO> LivlogDI.Controllers.BooksController::Create(LivlogDI.Models.DTO.BookDTO)": {
+          "Lines": {
+            "28": 0
+          },
+          "Branches": []
+        },
+        "System.Void LivlogDI.Controllers.BooksController::.ctor(LivlogDI.Services.Interfaces.IBookService)": {
+          "Lines": {
+            "13": 0,
+            "14": 0,
+            "15": 0,
+            "16": 0
+          },
+          "Branches": []
+        }
+      }
+    }
+  }
+}

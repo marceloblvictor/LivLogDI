@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>LivlogDI</name>
+    </assembly>
+    <members>
+        <member name="M:LivlogDI.Controllers.AuthController.GetAllUsers">
+            <summary>
+            Obter todos os usuários
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:LivlogDI.Controllers.AuthController.SignUp(LivlogDI.Models.DTO.UserDTO)">
+            <summary>
+            Registrar novo usuário
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:LivlogDI.Controllers.AuthController.Authenticate(LivlogDI.Models.DTO.UserDTO)">
+            <summary>
+            Realizar login com nome de usuário e senha
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:LivlogDI.Controllers.AuthController.Delete(System.Int32)">
+            <summary>
+            Deletar um usuário
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+    </members>
+</doc>
