@@ -12,7 +12,7 @@ namespace LivlogDI.Validators
                 throw new Exception("O nome de usuário fornecido já se encontra em utilização");
             }
 
-            if (dto.Password is { Length: < 6 })
+            if (dto.Password.Length < 6)
             {
                 throw new Exception("A senha deve possuir no mínimo 6 caracteres");
             }

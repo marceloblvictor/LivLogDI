@@ -1,10 +1,12 @@
-﻿using LivlogDI.Models.DTO;
+﻿using System.Diagnostics.CodeAnalysis;
+using LivlogDI.Models.DTO;
 using LivlogDI.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LivlogDI.Controllers
 {
+    [ExcludeFromCodeCoverage]
     [Route("api/[controller]")]
     [ApiController]
     public class AuthController : ControllerBase
