@@ -29,6 +29,169 @@
             <param name="id"></param>
             <returns></returns>
         </member>
+        <member name="M:LivlogDI.Controllers.BooksController.GetAll">
+            <summary>
+            Obter todos os livros.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:LivlogDI.Controllers.BooksController.GetBook(System.Int32)">
+            <summary>
+            Obter um livro pelo Id.
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:LivlogDI.Controllers.BooksController.Create(LivlogDI.Models.DTO.BookDTO)">
+            <summary>
+            Criar um livro.
+            </summary>
+            <param name="bookDTO"></param>
+            <returns></returns>
+        </member>
+        <member name="M:LivlogDI.Controllers.BooksController.Update(System.Int32,LivlogDI.Models.DTO.BookDTO)">
+            <summary>
+            Atualizar um livro.
+            </summary>
+            <param name="id"></param>
+            <param name="bookDTO"></param>
+            <returns></returns>
+        </member>
+        <member name="M:LivlogDI.Controllers.BooksController.Delete(System.Int32)">
+            <summary>
+            Deletar um livro.
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:LivlogDI.Controllers.CustomerBooksController.GetAll">
+            <summary>
+            Obter todos os livros de clientes.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:LivlogDI.Controllers.CustomerBooksController.Get(System.Int32)">
+            <summary>
+            Obter um livro de cliente por Id.
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:LivlogDI.Controllers.CustomerBooksController.GetByCustomer(System.Int32)">
+            <summary>
+            Obter os livros de clientes de um determinado cliente.
+            </summary>
+            <param name="customerId"></param>
+            <returns></returns>
+        </member>
+        <member name="M:LivlogDI.Controllers.CustomerBooksController.UpdateBookRentalData(System.Int32,LivlogDI.Models.DTO.CustomerBookDTO)">
+            <summary>
+            Atualizar os dados de um livro de cliente.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:LivlogDI.Controllers.CustomerBooksController.Delete(System.Int32)">
+            <summary>
+            Deletar um registro de livro de cliente.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:LivlogDI.Controllers.CustomerBooksController.RentBooks(LivlogDI.Models.DTO.CustomerBooksRequestDTO)">
+            <summary>
+            Alugar livros.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:LivlogDI.Controllers.CustomerBooksController.ReturnBooks(System.Collections.Generic.IList{System.Int32})">
+            <summary>
+            Devolver Livros.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:LivlogDI.Controllers.CustomerBooksController.RenewBookRental(System.Collections.Generic.IList{System.Int32})">
+            <summary>
+            Renovar aluguel de livro de cliente.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:LivlogDI.Controllers.CustomerBooksController.GetWaitingList(System.Int32)">
+            <summary>
+            Obter a lista de esperas de um determinado livro.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:LivlogDI.Controllers.CustomerBooksController.AddToWaitingList(LivlogDI.Models.DTO.CustomerBooksRequestDTO)">
+            <summary>
+            Adicionar cliente na lista de espera por livro.
+            </summary>
+            <param name="request"></param>
+            <returns></returns>
+        </member>
+        <member name="M:LivlogDI.Controllers.CustomerBooksController.RemoveFromWaitingList(System.Int32)">
+            <summary>
+            Remover cliente da lista de espera por livro.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:LivlogDI.Controllers.CustomersController.GetAll">
+            <summary>
+            Obter todos os clientes.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:LivlogDI.Controllers.CustomersController.Get(System.Int32)">
+            <summary>
+            Obter um cliente por Id.
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:LivlogDI.Controllers.CustomersController.Create(LivlogDI.Models.DTO.CustomerDTO)">
+            <summary>
+            Criar um cliente.
+            </summary>
+            <param name="customerDTO"></param>
+            <returns></returns>
+        </member>
+        <member name="M:LivlogDI.Controllers.CustomersController.Update(System.Int32,LivlogDI.Models.DTO.CustomerDTO)">
+            <summary>
+            Atualizar um cliente.
+            </summary>
+            <param name="id"></param>
+            <param name="customerDTO"></param>
+            <returns></returns>
+        </member>
+        <member name="M:LivlogDI.Controllers.CustomersController.Delete(System.Int32)">
+            <summary>
+            Deletar um cliente.
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:LivlogDI.Controllers.FinesController.GetAll">
+            <summary>
+            Obter todas as multas.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:LivlogDI.Controllers.FinesController.GetCustomerDebts(System.Int32)">
+            <summary>
+            Obter o valor total devido por um cliente.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:LivlogDI.Controllers.FinesController.RegisterPayment(System.Int32,System.Decimal)">
+            <summary>
+            Registrar pagamento de multa por cliente.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:LivlogDI.Controllers.FinesController.Delete(System.Int32)">
+            <summary>
+            Deletar uma multa.
+            </summary>
+            <returns></returns>
+        </member>
         <member name="F:LivlogDI.Enums.BookRentalStatus.Active">
             <summary>
             O livro está na posse do cliente.
