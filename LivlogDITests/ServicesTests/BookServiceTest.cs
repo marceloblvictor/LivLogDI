@@ -9,9 +9,39 @@ namespace LivlogDITests.ServicesTests
     public class BookServiceTest
     {
         Mock<IBookRepository> _mockedRepo { get; set; }
-        List<Book> _fakeBooks { get; set; }
-        BookDTO _fakeBookDTOToBeAdded { get; set; }
-        
+
+        List<Book> _fakeBooks { get; set; } = new List<Book>
+        {
+            new Book()
+            {
+                Id = 1,
+                Title = "As tranças do rei careca",
+                ISBN = "0-2918-9948-X",
+                Quantity = 99
+            },
+            new Book()
+            {
+                Id = 2,
+                Title = "Batleby, o escrivão",
+                ISBN = "0-6392-2838-0",
+                Quantity = 132
+            },
+            new Book()
+            {
+                Id = 3,
+                Title = "Coraline",
+                ISBN = "0-3543-4529-X",
+                Quantity = 272
+            },
+        };
+        BookDTO _fakeBookDTOToBeAdded { get; set; } = new BookDTO
+        {
+            Id = 4,
+            Title = "Deteuronomios",
+            ISBN = "0-9489-9819-9",
+            Quantity = 72
+        };
+
         Book ValidBook { get; set; } = new()
         {
             Id = 1,
@@ -93,39 +123,6 @@ namespace LivlogDITests.ServicesTests
 
         public BookServiceTest()
         {
-            _fakeBookDTOToBeAdded = new BookDTO
-            {
-                Id = 4,
-                Title = "Deteuronomios",
-                ISBN = "0-9489-9819-9",
-                Quantity = 72
-            };
-
-            _fakeBooks = new List<Book>
-            {
-                new Book()
-                {
-                    Id = 1,
-                    Title = "As tranças do rei careca",
-                    ISBN = "0-2918-9948-X",
-                    Quantity = 99
-                },
-                new Book()
-                {
-                    Id = 2,
-                    Title = "Batleby, o escrivão",
-                    ISBN = "0-6392-2838-0",
-                    Quantity = 132
-                },
-                new Book()
-                {
-                    Id = 3,
-                    Title = "Coraline",
-                    ISBN = "0-3543-4529-X",
-                    Quantity = 272
-                },
-            };
-
             _mockedRepo = new Mock<IBookRepository>();
             _mockedRepo
                 .Setup(repo => repo.GetAll())
@@ -140,15 +137,7 @@ namespace LivlogDITests.ServicesTests
                     book.Id = 4;
                     _fakeBooks.Add(book);
                 })
-                .Returns<Book>(book => book);
-            _mockedRepo
-                .Setup(repo => repo.Add(It.IsAny<Book>()))
-                .Callback<Book>(book =>
-                {
-                    book.Id = 4;
-                    _fakeBooks.Add(book);
-                })
-                .Returns<Book>(book => book);
+                .Returns<Book>(book => book);            
             _mockedRepo
                 .Setup(repo => repo.Update(It.IsAny<Book>()))
                 .Callback<Book>(b =>

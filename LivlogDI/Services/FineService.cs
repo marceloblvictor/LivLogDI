@@ -78,9 +78,7 @@ namespace LivlogDI.Services
                 CustomerName = null
             };
 
-            fineDto = Create(fineDto);
-
-            // SendFineNotification();
+            fineDto = Create(fineDto);            
 
             return fineDto;
         }

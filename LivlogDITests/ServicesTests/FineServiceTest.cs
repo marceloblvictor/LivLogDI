@@ -1,9 +1,12 @@
+using LivlogDI.Data;
 using LivlogDI.Data.Repositories;
+using LivlogDI.Data.Repositories.Interfaces;
 using LivlogDI.Enums;
 using LivlogDI.Models.DTO;
 using LivlogDI.Models.Entities;
 using LivlogDI.Services;
 using LivlogDI.Validators;
+using Moq;
 using static LivlogDI.Enums.CustomerCategory;
 using static LivlogDI.Enums.FineStatus;
 
@@ -11,6 +14,7 @@ namespace LivlogDITests.ServicesTests
 {
     public class FineServiceTest
     {
+        Mock<IFineRepository> _mockedRepo { get; set; }
         FineService _service { get; set; }
 
         Customer ValidCustomer { get; set; } = new()
@@ -21,7 +25,6 @@ namespace LivlogDITests.ServicesTests
             Email = "marceloblvictor@gmail.com",
             Category = (CustomerCategory)1
         };
-
         CustomerDTO ValidCustomerDTO { get; set; } = new()
         {
             Id = 1,
@@ -30,7 +33,6 @@ namespace LivlogDITests.ServicesTests
             Email = "marceloblvictor@gmail.com",
             Category = (CustomerCategory)1
         };        
-
         Fine ValidFine { get; set; } = new()
         {
             Id = 1,
@@ -38,8 +40,7 @@ namespace LivlogDITests.ServicesTests
             Status = (FineStatus)1,
             CustomerId = 1            
         };
-
-        IList<Fine> ValidFines = new List<Fine>()
+        List<Fine> ValidFines = new List<Fine>()
         {
             new ()
             {
@@ -62,25 +63,16 @@ namespace LivlogDITests.ServicesTests
                 Status = (FineStatus) 2,
                 CustomerId = 1
             },
-            new ()
-            {
-                Id = 4,
-                Amount = 18m,
-                Status = (FineStatus) 2,
-                CustomerId = 1
-            },
         };
-
         FineDTO ValidFineDTO { get; set; } = new()
         {
-            Id = 1,
+            Id = 4,
             Amount = 15m,
             Status = (FineStatus)1,
             CustomerId = 1,
             CustomerName = "marceloblvictor"
         };
-
-        IList<FineDTO> ValidFinesDTOs = new List<FineDTO>()
+        List<FineDTO> ValidFinesDTOs = new List<FineDTO>()
         {
             new ()
             {
@@ -118,17 +110,151 @@ namespace LivlogDITests.ServicesTests
 
         public FineServiceTest()
         {
-            var dbContext = new LivlogDI.Data.LivlogDIContext();
-            var customerService = new CustomerService(new CustomerRepository(dbContext));
-            _service = new FineService(new FineRepository(dbContext), new FineValidator(), customerService);
-
             ValidFine.Customer = ValidCustomer;
 
-            foreach (var fine in ValidFines)
-            {
-                fine.Customer = ValidCustomer;
-            }
-        }        
+            ValidFines.ForEach(f => { f.Customer = ValidCustomer; });
+
+            _mockedRepo = new Mock<IFineRepository>();
+            
+            _mockedRepo
+                .Setup(repo => repo.GetAll())
+                .Returns(ValidFines);
+            
+            _mockedRepo
+                .Setup(repo => repo.Get(It.IsAny<int>()))
+                .Returns<int>(id => ValidFines.Where(f => f.Id == id).Single());
+            
+            _mockedRepo
+                .Setup(repo => repo.Add(It.IsAny<Fine>()))
+                .Callback<Fine>(fine =>
+                {
+                    fine.Id = 4;
+                    fine.Customer = ValidCustomer;
+                    ValidFines.Add(fine);
+                })
+                .Returns<Fine>(fine => fine);
+            
+            _mockedRepo
+                .Setup(repo => repo.Update(It.IsAny<Fine>()))
+                .Callback<Fine>(f =>
+                {
+                    var fineToBeUpdated = ValidFines
+                        .Where(bk => bk.Id == f.Id)
+                        .Single();
+
+                    fineToBeUpdated.Amount = f.Amount;
+                    fineToBeUpdated.Status = f.Status;
+                })
+                .Returns<Fine>(fine => fine);
+
+            _mockedRepo
+                .Setup(repo => repo.Delete(It.IsAny<int>()))
+                .Callback<int>(id =>
+                {
+                    ValidFines.Remove(ValidFines.Where(f => f.Id == id).Single());
+                })
+                .Returns(true);
+
+            var _mockedCustomerRepo = new Mock<ICustomerRepository>();
+
+            _mockedCustomerRepo
+                .Setup(repo => repo.Get(It.IsAny<int>()))
+                .Returns(ValidCustomer);
+
+            _service = new FineService(
+                _mockedRepo.Object,
+                new FineValidator(),
+                new CustomerService(_mockedCustomerRepo.Object));
+        }
+
+        [Fact]
+        public void GetAll_FinesAreOrderedDescendingById()
+        {
+            // Act
+            var fines = _service.GetAll().ToList();
+
+            // Assert
+            Assert.Equal(3, fines.Count());
+            Assert.True(fines.Any(b => b.Id == ValidFines[0].Id));
+            Assert.True(fines.Any(b => b.Id == ValidFines[1].Id));
+            Assert.True(fines.Any(b => b.Id == ValidFines[2].Id));
+        }
+
+        [Theory]
+        [InlineData(1)]
+        public void GetAFineWithAValidId_ReturnsCorrectFineDTO(int validID)
+        {
+            // Act
+            var fine = _service.Get(validID);
+
+            // Assert            
+            Assert.NotNull(fine);
+            Assert.Equal(validID, fine.Id);
+        }
+
+        [Fact]
+        public void CreateAFine_PersistsNewFine()
+        {
+            var newFine = ValidFineDTO;
+
+            var addedBookDto = _service.Create(newFine);
+
+            Assert.True(ValidFinesDTOs.Count == 4);
+            Assert.Equal(newFine.Amount, addedBookDto.Amount);
+            Assert.Equal(newFine.Status, addedBookDto.Status);
+        }
+
+        [Fact]
+        public void UpdateFineToPaid_SufficientAmountPaid_StatusChangedToPaid()
+        {
+            var fine = _service
+                .GetAll()
+                .Where(b => b.Id == 1)
+                .Single();
+
+            var updatedFineDTO = _service.UpdateFineToPaid(fine.Id, fine.Amount);
+
+            Assert.True(fine.Id == updatedFineDTO.Id);
+            Assert.True(updatedFineDTO.Status == Paid);
+        }
+
+        [Fact]
+        public void GetCustomerDebts_GivenData_ReturnsCorrectAmount()
+        {
+            var customerInDebt = ValidCustomer;
+            var correctAmount = ValidFines
+                .Where(f => f.CustomerId == customerInDebt.Id &&
+                            f.Status == Active)
+                .Select(f => f.Amount)
+                .Sum();
+
+            var calculatedAmount = _service.GetCustomerDebts(customerInDebt.Id);
+
+            Assert.Equal(correctAmount, calculatedAmount);
+        }
+
+        [Fact]
+        public void FineCustomer_GivenData_CreateFine()
+        {
+            var daysOverdue = 100;
+
+            var updatedFineDTO = _service.FineCustomer(ValidCustomer.Id, daysOverdue);
+
+            Assert.True(ValidFines.Count == 4);
+            Assert.True(ValidFines.Any(f => f.Id == updatedFineDTO.Id));
+        }
+
+
+        [Fact]
+        public void Delete_ValidId_RemovesFromCollection()
+        {
+            var validFine = ValidFine;
+
+            var result = _service.Delete(validFine.Id);
+
+            Assert.True(result);
+            Assert.DoesNotContain(validFine, ValidFines);
+        }
 
         [InlineData(Top, 12.50)]
         [InlineData(Medium, 15.00)]
