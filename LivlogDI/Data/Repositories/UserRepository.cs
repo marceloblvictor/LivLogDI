@@ -50,14 +50,9 @@ namespace LivlogDI.Data.Repositories
 
         public bool Delete(int userId)
         {
-            var user = Get(userId);
+            var user = Get(userId);            
 
-            if (user is null)
-            {
-                throw new ArgumentException();
-            }
-
-            _dbContext.Remove(user);
+            _dbContext.Users.Remove(user);
             _dbContext.SaveChanges();
 
             return true;

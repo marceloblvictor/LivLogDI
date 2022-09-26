@@ -37,5 +37,25 @@ namespace LivlogDI.Data.Repositories
 
             return book;
         }
+
+        public Book Update(Book book)
+        {
+            _dbContext.Books.Update(book);
+            _dbContext.SaveChanges();
+
+            book = Get(book.Id);
+
+            return book;
+        }
+
+        public bool Delete(int bookId)
+        {
+            var book = Get(bookId);            
+
+            _dbContext.Books.Remove(book);
+            _dbContext.SaveChanges();
+
+            return true;
+        }
     }
 }

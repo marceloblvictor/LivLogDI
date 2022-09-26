@@ -16,7 +16,6 @@ namespace LivlogDI.Services
         private readonly IUserRepository _repo;
         private readonly IAuthValidator _validator;
 
-
         public AuthService(
             IUserRepository repo,
             IAuthValidator validator)

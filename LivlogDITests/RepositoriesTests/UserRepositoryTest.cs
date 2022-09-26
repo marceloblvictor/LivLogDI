@@ -40,9 +40,11 @@ namespace LivlogDITests.RepositoriesTests
                 },
             };
 
+            // Mocking the DbSet
             var query = _mockedUsers.AsQueryable();
 
             var mockUsers = new Mock<DbSet<User>>();
+
             mockUsers
                 .As<IQueryable<User>>()
                 .Setup(m => m.Provider)
@@ -59,9 +61,14 @@ namespace LivlogDITests.RepositoriesTests
                 .As<IQueryable<User>>()
                 .Setup(m => m.GetEnumerator())
                 .Returns(query.GetEnumerator());
+
             mockUsers
                 .Setup(m => m.Add(It.IsAny<User>()))
                 .Callback<User>((u) => _mockedUsers.Add(u));
+
+            mockUsers
+                .Setup(m => m.Remove(It.IsAny<User>()))
+                .Callback<User>((u) => { var result = _mockedUsers.Remove(u); }) ;
 
             mockUsers
                .Setup(m => m.Update(It.IsAny<User>()))
@@ -75,8 +82,9 @@ namespace LivlogDITests.RepositoriesTests
                    userToBeUpdated.Username = u.Username;
                    userToBeUpdated.Password = u.Password;
                    userToBeUpdated.Email = u.Email;
-               });
+               });            
 
+            // Mocking the DbContext
             _mockedDbContext = new Mock<LivlogDIContext>();
             _mockedDbContext
                 .Setup(ctx => ctx.Users)
@@ -125,7 +133,7 @@ namespace LivlogDITests.RepositoriesTests
         }
 
         [Fact]
-        public void Creat_GivenNewUserData_PersistsNewUser()
+        public void Create_GivenNewUserData_PersistsNewUser()
         {
             var newUser = new User
             {
@@ -133,7 +141,7 @@ namespace LivlogDITests.RepositoriesTests
                 Username = "Deteuronomios",
                 Password = "0-9489-9819-9",
                 Email = "deuteoronomios@gmail.com"
-            };
+            };            
 
             Repository.Add(newUser);
 
@@ -146,24 +154,49 @@ namespace LivlogDITests.RepositoriesTests
         }
 
         [Fact]
-        public void Creat_GivenNewUserData_PersistsNewUser()
+        public void Update_GivenNewUserData_PersistsNewUser()
         {
-            var newUser = new User
+            var updatedData = new User
             {
-                Id = 4,
-                Username = "Deteuronomios",
-                Password = "0-9489-9819-9",
-                Email = "deuteoronomios@gmail.com"
+                Id = 1,
+                Username = "DeteuronomiosMODIFICADO",
+                Password = "0-9489-9819-9MODIFICADO",
+                Email = "deuteoronomiosMODIFICADO@gmail.com"
             };
 
-            Repository.Add(newUser);
+            Repository.Update(updatedData);
 
-            Assert.True(_mockedDbContext.Object.Users.Count() == 4);
-            Assert.True(_mockedDbContext.Object.Users
-                            .Where(b => b.Id == newUser.Id)
-                            .FirstOrDefault()?
-                                .Username == newUser.Username);
-            Assert.True(_mockedDbContext.Object.Users.Any(b => b.Id == newUser.Id));
+            var updatedUser = Repository
+                .GetAll()
+                .FirstOrDefault(u => u.Id == updatedData.Id);
+
+            Assert.True(updatedUser is not null);
+            Assert.True(updatedUser.Username == updatedData.Username);
+            Assert.True(updatedUser.Password == updatedData.Password);
+            Assert.True(updatedUser.Email == updatedData.Email);
+        }
+
+        [Fact]
+        public void Delete_GivenValidUserId_DeleteUser()
+        {
+            var userToBeDeleted = _mockedUsers[0];
+            
+            Repository.Delete(userToBeDeleted.Id);
+
+            Assert.DoesNotContain(userToBeDeleted, _mockedUsers);            
+        }
+
+        [Fact]
+        public void Delete_GivenInvalidUserId_ThrowsException()
+        {
+            var invalidId = 99;
+
+            var operation = () => 
+            {
+                Repository.Delete(invalidId);
+            };
+
+            Assert.Throws<ArgumentException>(operation);
         }
     }
 }

@@ -21,11 +21,27 @@ builder.Services.AddDbContext<LivlogDIContext>(
 
 // Add dependencies to the container.
 builder.Services.AddScoped(typeof(ILivlogDIContext), typeof(LivlogDIContext));
+
 builder.Services.AddScoped(typeof(IBookService), typeof(BookService));
 builder.Services.AddScoped(typeof(IBookRepository), typeof(BookRepository));
+
 builder.Services.AddScoped(typeof(IAuthService), typeof(AuthService));
 builder.Services.AddScoped(typeof(IUserRepository), typeof(UserRepository));
+
+builder.Services.AddScoped(typeof(ICustomerService), typeof(CustomerService));
+builder.Services.AddScoped(typeof(ICustomerRepository), typeof(CustomerRepository));
+
+builder.Services.AddScoped(typeof(ICustomerBookService), typeof(CustomerBookService));
+builder.Services.AddScoped(typeof(ICustomerBookRepository), typeof(CustomerBookRepository));
+
+builder.Services.AddScoped(typeof(IFineService), typeof(FineService));
+builder.Services.AddScoped(typeof(IFineRepository), typeof(FineRepository));
+
+builder.Services.AddScoped(typeof(IMessagerService), typeof(MessagerService));
+
 builder.Services.AddScoped(typeof(IAuthValidator), typeof(AuthValidator));
+builder.Services.AddScoped(typeof(IBookRentalValidator), typeof(BookRentalValidator));
+builder.Services.AddScoped(typeof(IFineValidator), typeof(FineValidator));
 
 builder.Services.AddControllers();
 

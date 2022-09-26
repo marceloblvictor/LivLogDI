@@ -139,8 +139,6 @@ namespace LivlogDITests.ServicesTests
 
         [Theory]
         [InlineData(1)]
-        [InlineData(2)]
-        [InlineData(3)]
         public void Get_ValidId_ReturnsCorrectUserDTO(int validID)
         {
             // Act

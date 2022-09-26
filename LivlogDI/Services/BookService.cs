@@ -25,12 +25,10 @@ namespace LivlogDI.Services
         {
             var books = _repo.GetAll();
 
-            return books.Count > 0 ? 
-                CreateDTOs(books)
-                : new List<BookDTO>();
+            return CreateDTOs(books);
         }
 
-        public BookDTO Add(BookDTO bookDTO)
+        public BookDTO Create(BookDTO bookDTO)
         {
             var book = CreateEntity(bookDTO);
 
@@ -39,18 +37,39 @@ namespace LivlogDI.Services
             return CreateDTO(book);
         }
 
-        private BookDTO CreateDTO(Book book)
+        public BookDTO Update(int bookId, BookDTO bookDTO)
+        {
+            var book = _repo.Get(bookId);
+
+            book.Title = bookDTO.Title;
+            book.ISBN = bookDTO.ISBN;
+            book.Quantity = bookDTO.Quantity;
+
+            var updatedBook =
+                _repo.Update(book);
+
+            return CreateDTO(updatedBook);
+        }
+
+        public bool Delete(int id)
+        {
+            return _repo.Delete(id);
+        }
+
+        #region Helper Methods
+
+        public BookDTO CreateDTO(Book book)
         {
             return new BookDTO
             {
                 Id = book.Id,
                 Title = book.Title,
-                ISSBN = book.ISSBN,
-                PagesQuantity = book.PagesQuantity
+                ISBN = book.ISBN,
+                Quantity = book.Quantity
             };
         }
 
-        private IEnumerable<BookDTO> CreateDTOs(IEnumerable<Book> books)
+        public IEnumerable<BookDTO> CreateDTOs(IEnumerable<Book> books)
         {
             var booksDtos = new List<BookDTO>();
 
@@ -62,15 +81,29 @@ namespace LivlogDI.Services
             return booksDtos;
         }
 
-        private Book CreateEntity(BookDTO bookDTO)
+        public Book CreateEntity(BookDTO dto)
         {
             return new Book
             {
-                Id = bookDTO.Id,
-                Title = bookDTO.Title,
-                ISSBN = bookDTO.ISSBN,
-                PagesQuantity = bookDTO.PagesQuantity
+                Id = dto.Id,
+                Title = dto.Title,
+                ISBN = dto.ISBN,
+                Quantity = dto.Quantity
             };
         }
+
+        public IList<BookDTO> FilterByIds(IEnumerable<BookDTO> books, IList<int> ids)
+        {
+            return books
+                .Where(b => ids.Contains(b.Id))
+                .ToList();
+        }
+
+        public int GetBookQuantity(BookDTO bookDTO)
+        {
+            return bookDTO.Quantity;
+        }
+
+        #endregion
     }
 }

@@ -21,22 +21,22 @@ namespace LivlogDITests.RepositoriesTests
                 {
                     Id = 1,
                     Title = "As tranças do rei careca",
-                    ISSBN = "0-2918-9948-X",
-                    PagesQuantity = 99
+                    ISBN = "0-2918-9948-X",
+                    Quantity = 99
                 },
                 new Book()
                 {
                     Id = 2,
                     Title = "Batleby, o escrivão",
-                    ISSBN = "0-6392-2838-0",
-                    PagesQuantity = 132
+                    ISBN = "0-6392-2838-0",
+                    Quantity = 132
                 },
                 new Book()
                 {
                     Id = 3,
                     Title = "Coraline",
-                    ISSBN = "0-3543-4529-X",
-                    PagesQuantity = 272
+                    ISBN = "0-3543-4529-X",
+                    Quantity = 272
                 },
             };
 
@@ -59,9 +59,26 @@ namespace LivlogDITests.RepositoriesTests
                 .As<IQueryable<Book>>()
                 .Setup(m => m.GetEnumerator())
                 .Returns(query.GetEnumerator());
+            
             mockBooks
                 .Setup(m => m.Add(It.IsAny<Book>()))
                 .Callback<Book>((b) => _mockedBooks.Add(b));
+            mockBooks
+                .Setup(m => m.Remove(It.IsAny<Book>()))
+                .Callback<Book>((b) => { _mockedBooks.Remove(b); });
+            mockBooks
+               .Setup(m => m.Update(It.IsAny<Book>()))
+               .Callback<Book>((b) =>
+               {
+                   var bookToBeUpdated = _mockedBooks
+                    .AsQueryable()
+                    .Where(user => user.Id == b.Id)
+                    .Single();
+
+                   bookToBeUpdated.Title = b.Title;
+                   bookToBeUpdated.ISBN = b.ISBN;
+                   bookToBeUpdated.Quantity = b.Quantity;
+               });
 
             _mockedDbContext = new Mock<LivlogDIContext>();
             _mockedDbContext
@@ -119,8 +136,8 @@ namespace LivlogDITests.RepositoriesTests
             {
                 Id = 4,
                 Title = "Deteuronomios",
-                ISSBN = "0-9489-9819-9",
-                PagesQuantity = 72
+                ISBN = "0-9489-9819-9",
+                Quantity = 72
             };
 
             Repository.Add(newBook);
@@ -132,6 +149,52 @@ namespace LivlogDITests.RepositoriesTests
                             .FirstOrDefault()?
                                 .Title == newBook.Title);
             Assert.True(_mockedDbContext.Object.Books.Any(b => b.Id == newBook.Id));
+        }
+
+        [Fact]
+        public void Update_GivenNewBookData_PersistsNewUser()
+        {
+            var updatedData = new Book
+            {
+                Id = 1,
+                Title = "DeteuronomiosMODIFICADO",
+                ISBN = "0-9489-9819-9MODIFICADO",
+                Quantity = 4
+            };
+
+            Repository.Update(updatedData);
+
+            var updatedBook = Repository
+                .GetAll()
+                .FirstOrDefault(u => u.Id == updatedData.Id);
+
+            Assert.True(updatedBook is not null);
+            Assert.True(updatedBook.Title == updatedData.Title);
+            Assert.True(updatedBook.ISBN == updatedData.ISBN);
+            Assert.True(updatedBook.Quantity == updatedData.Quantity);
+        }
+
+        [Fact]
+        public void Delete_GivenValidBookId_DeleteBook()
+        {
+            var bookToBeDeleted = _mockedBooks[0];
+
+            Repository.Delete(bookToBeDeleted.Id);
+
+            Assert.DoesNotContain(bookToBeDeleted, _mockedBooks);
+        }
+
+        [Fact]
+        public void Delete_GivenInvalidBookId_ThrowsException()
+        {
+            var invalidId = 99;
+
+            var operation = () =>
+            {
+                Repository.Delete(invalidId);
+            };
+
+            Assert.Throws<ArgumentException>(operation);
         }
     }
 }

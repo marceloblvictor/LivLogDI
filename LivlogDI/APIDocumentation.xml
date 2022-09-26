@@ -29,5 +29,20 @@
             <param name="id"></param>
             <returns></returns>
         </member>
+        <member name="F:LivlogDI.Enums.BookRentalStatus.Active">
+            <summary>
+            O livro está na posse do cliente.
+            </summary>
+        </member>
+        <member name="F:LivlogDI.Enums.BookRentalStatus.WaitingQueue">
+            <summary>
+            O cliente está na fila de espera para alugar o livro.
+            </summary>
+        </member>
+        <member name="F:LivlogDI.Enums.BookRentalStatus.Returned">
+            <summary>
+            O cliente devolveu o livro. Pode haver ou não uma multa.
+            </summary>
+        </member>
     </members>
 </doc>
