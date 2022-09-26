@@ -2,7 +2,7 @@ using LivlogDI.Enums;
 using LivlogDI.Models.DTO;
 using LivlogDI.Validators;
 
-namespace LivlogNoDITests.ValidatorsTests
+namespace LivlogDITests.ValidatorsTests
 {
     public class FineValidatorTest
     {

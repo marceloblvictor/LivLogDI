@@ -53,14 +53,9 @@ namespace LivlogDI.Data.Repositories
 
         public bool Delete(int id)
         {
-            var customer = Get(id);
+            var customer = Get(id);            
 
-            if (customer is null)
-            {
-                throw new ArgumentException();
-            }
-
-            _dbContext.Remove(customer);
+            _dbContext.Customers.Remove(customer);
             _dbContext.SaveChanges();
 
             return true;

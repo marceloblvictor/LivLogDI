@@ -9,37 +9,35 @@ namespace LivlogDITests.RepositoriesTests
     public class UserRepositoryTest
     {
         Mock<LivlogDIContext> _mockedDbContext { get; set; }
-        List<User> _mockedUsers { get; set; }
+        List<User> _mockedUsers { get; set; } = new List<User>
+        {
+            new User()
+            {
+                Id = 1,
+                Username = "user1",
+                Password = "12345678",
+                Email = "user1@email.com"
+            },
+            new User()
+            {
+                Id = 2,
+                Username = "user2",
+                Password = "12345678",
+                Email = "user2@email.com"
+            },
+            new User()
+            {
+                Id = 3,
+                Username = "user3",
+                Password = "12345678",
+                Email = "user3@email.com"
+            },
+        };
 
         UserRepository Repository { get; set; }
 
         public UserRepositoryTest()
         {
-            _mockedUsers = new List<User>
-            {
-                new User()
-                {
-                    Id = 1,
-                    Username = "user1",
-                    Password = "12345678",
-                    Email = "user1@email.com"
-                },
-                new User()
-                {
-                    Id = 2,
-                    Username = "user2",
-                    Password = "12345678",
-                    Email = "user2@email.com"
-                },
-                new User()
-                {
-                    Id = 3,
-                    Username = "user3",
-                    Password = "12345678",
-                    Email = "user3@email.com"
-                },
-            };
-
             // Mocking the DbSet
             var query = _mockedUsers.AsQueryable();
 
@@ -108,8 +106,6 @@ namespace LivlogDITests.RepositoriesTests
 
         [Theory]
         [InlineData(1)]
-        [InlineData(2)]
-        [InlineData(3)]
         public void Get_GivenValidId_IsSuccess(int validID)
         {
             // Act

@@ -7,7 +7,7 @@ using LivlogDI.Validators;
 using static LivlogDI.Enums.BookRentalStatus;
 using static LivlogDI.Enums.CustomerCategory;
 
-namespace LivlogNoDITests.ServicesTests
+namespace LivlogDITests.ServicesTests
 {
     public class CustomerBookServiceTest
     {

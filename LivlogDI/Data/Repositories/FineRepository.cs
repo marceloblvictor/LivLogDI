@@ -53,14 +53,9 @@ namespace LivlogDI.Data.Repositories
 
         public bool Delete(int fineId)
         {
-            var fine = Get(fineId);
+            var fine = Get(fineId);           
 
-            if (fine is null)
-            {
-                throw new ArgumentException();
-            }
-
-            _dbContext.Remove(fine);
+            _dbContext.Fines.Remove(fine);
             _dbContext.SaveChanges();
 
             return true;

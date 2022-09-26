@@ -102,9 +102,7 @@ namespace LivlogDITests.RepositoriesTests
         }
 
         [Theory]
-        [InlineData(1)]
-        [InlineData(2)]
-        [InlineData(3)]
+        [InlineData(1)]        
         public void GetABookWithAValidId_IsSuccess(int validID)
         {
             // Act
@@ -116,9 +114,7 @@ namespace LivlogDITests.RepositoriesTests
         }
 
         [Theory]
-        [InlineData(99)]
-        [InlineData(999)]
-        [InlineData(9999)]
+        [InlineData(99)]        
         public void GetABookWithAnInvalidId_IsFailure(int invalidId)
         {
             // Act

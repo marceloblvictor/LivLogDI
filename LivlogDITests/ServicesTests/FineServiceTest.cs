@@ -7,7 +7,7 @@ using LivlogDI.Validators;
 using static LivlogDI.Enums.CustomerCategory;
 using static LivlogDI.Enums.FineStatus;
 
-namespace LivlogNoDITests.ServicesTests
+namespace LivlogDITests.ServicesTests
 {
     public class FineServiceTest
     {
