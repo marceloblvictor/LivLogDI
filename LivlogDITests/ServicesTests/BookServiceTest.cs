@@ -9,6 +9,7 @@ namespace LivlogDITests.ServicesTests
     public class BookServiceTest
     {
         Mock<IBookRepository> _mockedRepo { get; set; }
+        BookService Service { get; set; }
 
         List<Book> _fakeBooks { get; set; } = new List<Book>
         {
@@ -118,8 +119,6 @@ namespace LivlogDITests.ServicesTests
                 Quantity = 5
             },
         };
-
-        BookService Service { get; set; }
 
         public BookServiceTest()
         {

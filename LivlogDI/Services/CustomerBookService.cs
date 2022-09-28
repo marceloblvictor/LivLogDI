@@ -56,6 +56,16 @@ namespace LivlogDI.Services
             return customerBooks;
         }
 
+        public IList<CustomerBookDTO> GetByCostumerAndBook(
+            int customerId,
+            int bookId)
+        {
+            return GetAll()
+                .Where(cb => cb.CustomerId == customerId &&
+                             cb.BookId == bookId)
+                .ToList();
+        }
+
         public CustomerBookDTO Update(int customerBookId, CustomerBookDTO customerBookDTO)
         {
             var customerBook = _repo.Get(customerBookId);
@@ -341,17 +351,7 @@ namespace LivlogDI.Services
             }
 
             return true;
-        }
-
-        public IList<CustomerBookDTO> GetByCostumerAndBook(
-            int customerId,
-            int bookId)
-        {
-            return GetAll()
-                .Where(cb => cb.CustomerId == customerId &&
-                             cb.BookId == bookId)
-                .ToList();
-        }
+        }        
 
         #region Helper Methods
 
@@ -376,10 +376,8 @@ namespace LivlogDI.Services
         public bool IsReturnedBookOverdue(
             CustomerBookDTO customerBook,
             DateTime returnDate)
-        {
-            var result = returnDate > customerBook.DueDate;
-
-            return result;
+        {            
+            return returnDate.CompareTo(customerBook.DueDate) > 0;
         }
 
         public DateTime CalculateDueDate(CustomerDTO customer, DateTime startTime)

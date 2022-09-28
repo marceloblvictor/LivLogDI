@@ -1,9 +1,13 @@
-using LivlogDI.Data.Repositories;
+using LivlogDI.Constants;
+using LivlogDI.Data.Repositories.Interfaces;
 using LivlogDI.Enums;
 using LivlogDI.Models.DTO;
 using LivlogDI.Models.Entities;
 using LivlogDI.Services;
+using LivlogDI.Services.Interfaces;
 using LivlogDI.Validators;
+using Microsoft.VisualStudio.TestPlatform.Common;
+using Moq;
 using static LivlogDI.Enums.BookRentalStatus;
 using static LivlogDI.Enums.CustomerCategory;
 
@@ -11,6 +15,8 @@ namespace LivlogDITests.ServicesTests
 {
     public class CustomerBookServiceTest
     {
+        Mock<ICustomerBookRepository> _mockedRepo { get; set; }
+        
         CustomerBookService _service { get; set; }
 
         Book ValidBook { get; set; } = new()
@@ -20,8 +26,7 @@ namespace LivlogDITests.ServicesTests
             ISBN = "teste1",
             Quantity = 5
         };
-
-        IList<Book> ValidBooks = new List<Book>()
+        List<Book> ValidBooks { get; set; } = new List<Book>()
         {
             new()
             {
@@ -52,7 +57,30 @@ namespace LivlogDITests.ServicesTests
                 Quantity = 5
             },
         };
-
+        List<Fine> ValidFines { get; set; } = new List<Fine>()
+        {
+            new ()
+            {
+                Id = 1,
+                Amount = 15m,
+                Status = (FineStatus) 1,
+                CustomerId = 1
+            },
+            new ()
+            {
+                Id = 2,
+                Amount = 13m,
+                Status = (FineStatus) 1,
+                CustomerId = 1
+            },
+            new ()
+            {
+                Id = 3,
+                Amount = 12m,
+                Status = (FineStatus) 2,
+                CustomerId = 1
+            },
+        };
         Customer ValidCustomer { get; set; } = new()
         {
             Id = 1,
@@ -61,7 +89,6 @@ namespace LivlogDITests.ServicesTests
             Email = "marceloblvictor@gmail.com",
             Category = (CustomerCategory)1
         };     
-
         CustomerDTO ValidCustomerDTO { get; set; } = new()
         {
             Id = 1,
@@ -70,8 +97,7 @@ namespace LivlogDITests.ServicesTests
             Email = "marceloblvictor@gmail.com",
             Category = (CustomerCategory)1
         };
-
-        CustomerBook ValidCustomerBookActive { get; set; } = new()
+        CustomerBook ValidCustomerBook { get; set; } = new()
         {
             Id = 1,
             BookId = 1,
@@ -80,8 +106,7 @@ namespace LivlogDITests.ServicesTests
             DueDate = new DateTime(2022, 10, 01),
             Status = Active
         };   
-
-        IList<CustomerBook> ValidCustomerBooks { get; set; } = new List<CustomerBook>()
+        List<CustomerBook> ValidCustomerBooks { get; set; } = new List<CustomerBook>()
         {
             new()
             {
@@ -111,8 +136,7 @@ namespace LivlogDITests.ServicesTests
                 Status = Returned
             }
         };
-
-        CustomerBookDTO ValidCustomerBookActiveDTO { get; set; } = new()
+        CustomerBookDTO ValidCustomerBookDTO { get; set; } = new()
         {
             Id = 1,
             BookId = 1,
@@ -121,8 +145,7 @@ namespace LivlogDITests.ServicesTests
             DueDate = new DateTime(2022, 10, 01),
             Status = Active
         };        
-
-        IList<CustomerBookDTO> ValidCustomerBooksDTOs { get; set; } = new List<CustomerBookDTO>()
+        List<CustomerBookDTO> ValidCustomerBooksDTOs { get; set; } = new List<CustomerBookDTO>()
         {
             new()
             {
@@ -151,28 +174,112 @@ namespace LivlogDITests.ServicesTests
                 DueDate = null,
                 Status = Returned
             }
-        };        
+        };
+
+        CustomerBooksRequestDTO RentBooksRequest { get; set; } = new()
+        {
+            CustomerId = 1,
+            BookIds = new[] { 1 }
+        };
 
         public CustomerBookServiceTest()
         {
             // Preparar Moq            
+            _mockedRepo = new Mock<ICustomerBookRepository>();
+            _mockedRepo
+                .Setup(repo => repo.GetAll())
+                .Returns(ValidCustomerBooks);
+            _mockedRepo
+                .Setup(repo => repo.Get(It.IsAny<int>()))
+                .Returns<int>(id => ValidCustomerBooks.Where(b => b.Id == id).Single());
+            _mockedRepo
+                .Setup(repo => repo.Add(It.IsAny<CustomerBook>()))
+                .Callback<CustomerBook>(book =>
+                {
+                    book.Id = 4;
+                    ValidCustomerBooks.Add(book);
+                })
+                .Returns<CustomerBook>(book => 
+                {
+                    book.Book = ValidBooks.Where(b => b.Id == book.BookId).Single();
+                    book.Customer = ValidCustomer;
+                    return book;
+                });
+            _mockedRepo
+                .Setup(repo => repo.Update(It.IsAny<CustomerBook>()))
+                .Callback<CustomerBook>(b =>
+                {
+                    var bookToBeUpdated = ValidCustomerBooks
+                        .Where(bk => bk.Id == b.Id)
+                        .Single();
 
-            var dbContext = new LivlogDI.Data.LivlogDIContext();
-            var customerService = new CustomerService(new CustomerRepository(dbContext));
+                    bookToBeUpdated.StartDate = b.StartDate;
+                    bookToBeUpdated.DueDate = b.DueDate;
+                    bookToBeUpdated.Status = b.Status;
+                })
+                .Returns<CustomerBook>(book => book);
+
+            _mockedRepo
+                .Setup(repo => repo.Delete(It.IsAny<int>()))
+                .Callback<int>(id =>
+                {
+                    ValidCustomerBooks.Remove(ValidCustomerBooks.Where(u => u.Id == id).Single());
+                })
+                .Returns(true);
+
+            var _mockedCustomerRepo = new Mock<ICustomerRepository>();
+            _mockedCustomerRepo
+                .Setup(repo => repo.Get(It.IsAny<int>()))
+                .Returns(ValidCustomer);
+            var customerService = new CustomerService(_mockedCustomerRepo.Object);
+            
+            var _mockedBookRepo = new Mock<IBookRepository>();
+            _mockedBookRepo
+                .Setup(repo => repo.Get(It.IsAny<int>()))
+                .Returns(ValidBook);
+            _mockedBookRepo
+                .Setup(repo => repo.GetAll())
+                .Returns(ValidBooks);
+            var bookService = new BookService(_mockedBookRepo.Object);
+
+            var fineValidator = new FineValidator();
+
+            var _mockedFineRepo = new Mock<IFineRepository>();
+            _mockedFineRepo
+                .Setup(repo => repo.GetAll())
+                .Returns(ValidFines);
+            _mockedFineRepo
+                .Setup(repo => repo.Add(It.IsAny<Fine>()))
+                .Callback<Fine>(fine =>
+                {
+                    fine.Id = 4;
+                    fine.Customer = ValidCustomer;
+                    ValidFines.Add(fine);
+                })
+                .Returns<Fine>(fine => fine);
+            var fineService = new FineService(
+                _mockedFineRepo.Object, 
+                fineValidator, 
+                customerService);
+
+            var _mockedMessenger = new Mock<IMessagerService>();
+            _mockedMessenger
+                .Setup(repo => repo.SendEmail("x", "y", "w", "z"))
+                .Returns(true);
 
             _service = new CustomerBookService(
-                new CustomerBookRepository(dbContext),
+                _mockedRepo.Object,
                 customerService,
-                new BookService(new BookRepository(dbContext)),
-                new FineService(new FineRepository(dbContext), new FineValidator(), customerService),
+                bookService,
+                fineService,
                 new BookRentalValidator(),
-                new MessagerService());
+                _mockedMessenger.Object);
 
-            ValidCustomerBookActive.Book = ValidBook;
-            ValidCustomerBookActive.Customer = ValidCustomer;
+            ValidCustomerBook.Book = ValidBook;
+            ValidCustomerBook.Customer = ValidCustomer;
 
-            ValidCustomerBookActiveDTO.BookTitle = ValidBook.Title;
-            ValidCustomerBookActiveDTO.CustomerName = ValidCustomer.Name;
+            ValidCustomerBookDTO.BookTitle = ValidBook.Title;
+            ValidCustomerBookDTO.CustomerName = ValidCustomer.Name;
 
             foreach (var cb in ValidCustomerBooks)
             {
@@ -181,6 +288,235 @@ namespace LivlogDITests.ServicesTests
                     .Where(b => b.Id == cb.BookId)
                     .Single();
             }
+            
+            ValidFines.ForEach(f => { f.Customer = ValidCustomer; });
+        }
+
+        [Fact]
+        public void GetAll_CustomersBooksAreOrderedDescendingById()
+        {
+            // Act
+            var books = _service.GetAll().ToList();
+
+            // Assert
+            Assert.Equal(3, books.Count());
+            Assert.True(books.Any(b => b.Id == ValidCustomerBooks[0].Id));
+            Assert.True(books.Any(b => b.Id == ValidCustomerBooks[1].Id));
+            Assert.True(books.Any(b => b.Id == ValidCustomerBooks[2].Id));
+        }
+
+        [Theory]
+        [InlineData(1)]
+        public void GetACustomerBookWithAValidId_ReturnsCorrectCustomerBookDTO(int validID)
+        {
+            // Act
+            var book = _service.Get(validID);
+
+            // Assert            
+            Assert.NotNull(book);
+            Assert.Equal(validID, book.Id);
+        }
+
+        [Theory]
+        [InlineData(1)]
+        public void GetByCustomer_ValidId_ReturnsCorrectCustomerBookDTO(int validID)
+        {
+            // Act
+            var books = _service.GetByCustomer(validID);
+
+            // Assert            
+            Assert.True(books.All(b => b.CustomerId == validID));
+        }
+
+        [Theory]
+        [InlineData(99, 98)]
+        public void GetByCustomer_InvalidId_ReturnsEmptyList(int invalidID, int invalidId2)
+        {
+            // Act
+            var books = _service.GetByCostumerAndBook(invalidID, invalidId2);
+
+            // Assert            
+            Assert.Empty(books);
+        }
+
+        [Theory]
+        [InlineData(1, 1)]
+        public void GetByCustomerAndBook_ReturnsCorrectCustomerBookDTO(int customerId, int bookId)
+        {
+            // Act
+            var books = _service.GetByCostumerAndBook(customerId, bookId);
+
+            // Assert            
+            Assert.True(
+                books.All(b => b.CustomerId == customerId && b.BookId == bookId));
+        }
+
+        [Fact]
+        public void Update_PersistsChangesToBook()
+        {
+            var book = _service
+                .GetAll()
+                .Where(b => b.Id == 1)
+                .Single();
+
+            book.StartDate = new DateTime(2022, 05, 01);
+            book.DueDate = new DateTime(2022, 10, 01);
+            book.Status = (BookRentalStatus) 3;
+
+            var updatedBookDTO = _service.Update(book.Id, book);
+
+            Assert.Equal(book.StartDate, updatedBookDTO.StartDate);
+            Assert.Equal(book.DueDate, updatedBookDTO.DueDate);
+            Assert.Equal(book.Status, updatedBookDTO.Status);
+        }
+
+        [Fact]
+        public void Delete_ValidId_RemovesFromCollection()
+        {
+            var validBook = ValidBook;
+
+            var result = _service.Delete(validBook.Id);
+
+            Assert.True(result);
+            Assert.DoesNotContain(validBook, ValidBooks);
+        }
+
+        [Fact]
+        public void RentBooks_ValidCustomer_Successfull()
+        {
+            // Arrange
+            var requestDTO = RentBooksRequest;
+
+            ValidFines = ValidFines
+                .Where(f => f.CustomerId == requestDTO.CustomerId)
+                .Select(f => { f.Status = FineStatus.Paid; return f; })
+                .ToList();
+
+            // Act
+            var resultDto = _service.RentBooks(requestDTO);
+
+            // Assert
+            Assert.True(ValidCustomerBooks.Count == 4);
+            Assert.True(ValidCustomerBooks.Any(cb => cb.BookId == requestDTO.BookIds[0] && 
+                                                     cb.CustomerId == requestDTO.CustomerId &&
+                                                     cb.Status == Active));
+        }
+
+        [Fact]
+        public void ReturnBooks_ValidDate_Successfull()
+        {
+            // Arrange
+            var custBookIds = new[] { 1 };            
+
+            // Act
+            var resultDto = _service.ReturnBooks(custBookIds);
+
+            // Assert
+            Assert.True(ValidCustomerBooks
+                .Where(cb => cb.Id == custBookIds[0])
+                .Single()
+                    .Status == Returned);
+        }
+
+        [Fact]
+        public void ReturnBooks_OverdueDate_Successfull()
+        {
+            // Arrange
+            var custBook = ValidCustomerBooks[0];
+            custBook.DueDate = new DateTime(2022, 09, 01);
+            var custBookIds = new[] { custBook.Id };
+
+            // Act
+            var resultDto = _service.ReturnBooks(custBookIds);
+
+            // Assert
+            Assert.True(ValidFines.Count == 4);
+            Assert.True(ValidFines.Any(f => f.CustomerId == custBook.CustomerId));
+        }
+
+        [Fact]
+        public void RenewnBookRental_ValidDate_Successfull()
+        {
+            // Arrange
+            var custBook = ValidCustomerBooks[0];
+            var today = DateTime.Now;
+            custBook.DueDate = today;
+            var custBookIds = new[] { custBook.Id };
+            
+            ValidFines = ValidFines
+                .Where(f => f.CustomerId == custBook.CustomerId)
+                .Select(f => { f.Status = FineStatus.Paid; return f; })
+                .ToList();
+
+            // Act
+            var resultDto = _service.RenewBookRental(custBookIds);
+
+            // Assert
+            Assert.True(ValidCustomerBooks
+                .Where(cb => cb.Id == custBookIds[0])
+                .Single()
+                    .DueDate > today);
+        }
+
+        [Theory]
+        [InlineData(1)]
+        public void GetWaitingList_GivenValidId_ReturnCorrectData(int bookId)
+        {
+            // Act
+            var books = _service.GetWaitingList(bookId);
+
+            // Assert            
+            Assert.True(
+                books.All(b => b.Status == WaitingQueue));
+        }
+
+        [Fact]
+        public void AddToWaitingList_ValidCustomer_Successfull()
+        {
+            // Arrange
+            var requestDTO = RentBooksRequest;
+            ValidCustomerBooks = ValidCustomerBooks
+                .Where(cb => cb.CustomerId == requestDTO.CustomerId)
+                .Select(cb => { cb.Status = Returned; return cb; })
+                .ToList();
+            ValidBooks.ForEach(b => { b.Quantity = 0; });
+            ValidFines = ValidFines
+                .Where(f => f.CustomerId == requestDTO.CustomerId)
+                .Select(f => { f.Status = FineStatus.Paid; return f; })
+                .ToList();
+
+            // Act
+            var resultDto = _service.AddToWaitingList(requestDTO);
+
+            // Assert
+            Assert.True(ValidCustomerBooks.Count == 4);
+            Assert.True(ValidCustomerBooks.Any(cb => cb.BookId == requestDTO.BookIds[0] && 
+                                                     cb.CustomerId == requestDTO.CustomerId &&
+                                                     cb.Status == WaitingQueue));
+        }
+
+        [Fact]
+        public void RemoveFromWaitingList_ValidId_RemovesFromCollection()
+        {
+            var waitedBook = ValidCustomerBooks[1];
+
+            var result = _service.RemoveFromWaitingList(waitedBook.Id);
+
+            Assert.True(result);
+            Assert.DoesNotContain(waitedBook, ValidCustomerBooks);
+        }
+
+        [Fact]
+        public void RemoveFromWaitingQueueByCustomerAndBook_ValidId_RemovesFromCollection()
+        {
+            var waitedCustomerBook = ValidCustomerBooks[1];
+
+            var result = _service.RemoveFromWaitingQueueByCustomerAndBook(
+                waitedCustomerBook.CustomerId,
+                waitedCustomerBook.BookId);
+
+            Assert.True(result);
+            Assert.DoesNotContain(waitedCustomerBook, ValidCustomerBooks);
         }
 
         [Fact]
@@ -203,7 +539,7 @@ namespace LivlogDITests.ServicesTests
         {
             // Arrange
             (var startDate, var endDate) = 
-                (ValidCustomerBookActive.StartDate, ValidCustomerBookActive.DueDate);
+                (ValidCustomerBook.StartDate, ValidCustomerBook.DueDate);
 
             // Act
             var result = _service.GetOverdueDays(startDate.Value, endDate.Value);
@@ -217,7 +553,7 @@ namespace LivlogDITests.ServicesTests
         {
             // Arrange
             var returnDate = new DateTime(2022, 12, 31);
-            var validCustomerBookDto = ValidCustomerBookActiveDTO;
+            var validCustomerBookDto = ValidCustomerBookDTO;
 
             // Act
             var result = _service.IsReturnedBookOverdue(validCustomerBookDto, returnDate);
@@ -231,7 +567,7 @@ namespace LivlogDITests.ServicesTests
         {
             // Arrange
             var returnDate = new DateTime(2022, 01, 01);
-            var validCustomerBookDto = ValidCustomerBookActiveDTO;
+            var validCustomerBookDto = ValidCustomerBookDTO;
 
             // Act
             var result = _service.IsReturnedBookOverdue(validCustomerBookDto, returnDate);
@@ -247,7 +583,7 @@ namespace LivlogDITests.ServicesTests
             var returnDate = new DateTime(2022, 12, 31);
             var dueDate = new DateTime(2022, 12, 31);
 
-            var validCustomerBookDto = ValidCustomerBookActiveDTO;
+            var validCustomerBookDto = ValidCustomerBookDTO;
             validCustomerBookDto.DueDate = dueDate;
 
             // Act
@@ -427,7 +763,7 @@ namespace LivlogDITests.ServicesTests
         public void CreateDTO_GenerateDTOWithEntityData_Succes()
         {
             // Arrange
-            var validCustomerBook = ValidCustomerBookActive;
+            var validCustomerBook = ValidCustomerBook;
 
             // Act
             var dto = _service.CreateDTO(validCustomerBook);
@@ -453,7 +789,6 @@ namespace LivlogDITests.ServicesTests
             var dtos = _service.CreateDTOs(validCustomerBooks);
 
             // Assert
-
             foreach (var dto in dtos)
             {
                 var validCustomerBook =
@@ -474,7 +809,7 @@ namespace LivlogDITests.ServicesTests
         public void CreateEntity_GenerateEntityWithDTOData_Succes()
         {
             // Arrange
-            var validCustomerBookDTO = ValidCustomerBookActiveDTO;
+            var validCustomerBookDTO = ValidCustomerBookDTO;
 
             // Act
             var dto = _service.CreateEntity(validCustomerBookDTO);

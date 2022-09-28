@@ -197,11 +197,11 @@ namespace LivlogDITests.ServicesTests
         {
             var newFine = ValidFineDTO;
 
-            var addedBookDto = _service.Create(newFine);
+            var addedFineDto = _service.Create(newFine);
 
             Assert.True(ValidFinesDTOs.Count == 4);
-            Assert.Equal(newFine.Amount, addedBookDto.Amount);
-            Assert.Equal(newFine.Status, addedBookDto.Status);
+            Assert.Equal(newFine.Amount, addedFineDto.Amount);
+            Assert.Equal(newFine.Status, addedFineDto.Status);
         }
 
         [Fact]
